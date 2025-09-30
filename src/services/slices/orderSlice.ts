@@ -1,4 +1,3 @@
-// src/slices/orderSlice.ts
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { orderBurgerApi as orderBurgerApiApi } from '../../utils/burger-api';
 
@@ -32,6 +31,7 @@ const orderSlice = createSlice({
   reducers: {
     clearOrder: (state) => {
       state.orderNumber = null;
+      state.error = null;
     }
   },
   extraReducers: (builder) => {

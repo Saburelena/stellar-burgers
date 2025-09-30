@@ -1,20 +1,22 @@
-// src/components/burger-constructor/burger-constructor.tsx
 import { FC, useCallback } from 'react';
 import { useDrop } from 'react-dnd';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { useAppDispatch, useAppSelector } from '../../services/store';
 import {
   getConstructorBun,
   getConstructorItems,
-  getTotalPrice
+  getTotalPrice,
+  selectIsAuth,
+  selectOrderError,
+  selectOrderIsLoading
 } from '@selectors';
+import { useAppDispatch, useAppSelector } from '../../services/store';
 import {
   addIngredient,
   removeIngredient,
   moveIngredient,
   clearConstructor
 } from '@slices/constructorSlice';
-import { orderBurgerApi } from '@slices/orderSlice';
+import { clearOrder, orderBurgerApi } from '@slices/orderSlice';
 import { TIngredient, TConstructorIngredient } from '@utils-types';
 import { BurgerConstructorUI } from '@ui';
 
@@ -31,10 +33,9 @@ export const BurgerConstructor: FC<BurgerConstructorProps> = ({
   const ingredients = useAppSelector(getConstructorItems);
   const bun = useAppSelector(getConstructorBun);
   const totalPrice = useAppSelector(getTotalPrice);
-  const { isAuth } = useAppSelector((state) => state.user);
-  const { isLoading: orderRequest, error: orderError } = useAppSelector(
-    (state) => state.order
-  );
+  const isAuth = useAppSelector(selectIsAuth);
+  const orderRequest = useAppSelector(selectOrderIsLoading);
+  const orderError = useAppSelector(selectOrderError);
 
   const [, dropTarget] = useDrop<TIngredient>({
     accept: 'ingredient',
@@ -81,6 +82,7 @@ export const BurgerConstructor: FC<BurgerConstructorProps> = ({
       bun._id
     ];
 
+    dispatch(clearOrder());
     onOrderSuccess?.();
 
     dispatch(orderBurgerApi(ingredientIds))
@@ -88,8 +90,8 @@ export const BurgerConstructor: FC<BurgerConstructorProps> = ({
       .then(() => {
         dispatch(clearConstructor());
       })
-      .catch((error) => {
-        console.error('Ошибка при создании заказа:', error);
+      .catch(() => {
+        // Ошибка отображается через состояние order, дополнительный вывод не требуется
       });
   };
 

@@ -1,11 +1,16 @@
 import { FC } from 'react';
 import { useAppSelector } from '../../services/store';
+import {
+  selectOrderError,
+  selectOrderIsLoading,
+  selectOrderNumber
+} from '@selectors';
 import { OrderDetailsUI, Preloader } from '@ui';
 
 export const OrderDetails: FC = () => {
-  const { orderNumber, isLoading, error } = useAppSelector(
-    (state) => state.order
-  );
+  const orderNumber = useAppSelector(selectOrderNumber);
+  const isLoading = useAppSelector(selectOrderIsLoading);
+  const error = useAppSelector(selectOrderError);
 
   if (isLoading) {
     return (

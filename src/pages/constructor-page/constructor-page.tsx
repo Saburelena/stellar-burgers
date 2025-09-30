@@ -29,7 +29,6 @@ export const ConstructorPage: FC = () => {
 
   const handleOrderSuccess = () => {
     setIsOrderModalOpen(true);
-    dispatch(clearConstructor());
   };
 
   return (

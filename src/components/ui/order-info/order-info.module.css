@@ -2,8 +2,14 @@
   margin: 0 auto;
   width: 640px;
 }
+.header_row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
 .number {
-  text-align: center;
+  margin: 0;
 }
 
 .status {

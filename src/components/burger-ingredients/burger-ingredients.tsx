@@ -1,4 +1,3 @@
-// src/components/burger-ingredients/burger-ingredients.tsx
 import { FC, useEffect, useMemo, useRef, useState } from 'react';
 import { useInView } from 'react-intersection-observer';
 import { BurgerIngredientsUI } from '@ui';

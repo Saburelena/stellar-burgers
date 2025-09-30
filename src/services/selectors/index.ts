@@ -1,15 +1,12 @@
-// src/services/selectors/index.ts
 import { RootState } from '../store';
 import { TIngredient } from '@utils-types';
 
-// Селекторы для ингредиентов
 export const getIngredientsApi = (state: RootState) => state.ingredients.items;
 export const getIngredientsApiLoading = (state: RootState) =>
   state.ingredients.isLoading;
 export const getIngredientsApiError = (state: RootState) =>
   state.ingredients.error;
 
-// Селекторы для конструктора
 export const getConstructorItems = (state: RootState) =>
   state.constructorBurger.ingredients;
 export const getConstructorBun = (state: RootState) =>
@@ -26,3 +23,10 @@ export const getTotalPrice = (state: RootState) => {
 
   return bunPrice + ingredientsPrice;
 };
+export const selectOrderNumber = (state: RootState) => state.order.orderNumber;
+export const selectOrderIsLoading = (state: RootState) => state.order.isLoading;
+export const selectOrderError = (state: RootState) => state.order.error;
+
+export const selectUser = (state: RootState) => state.user.user;
+export const selectIsAuth = (state: RootState) => state.user.isAuth;
+export const selectUserName = (state: RootState) => state.user.user?.name;
