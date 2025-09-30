@@ -16,20 +16,22 @@ export type TConstructorIngredient = TIngredient & {
   id: string;
 };
 
+export type TOrderStatus = 'created' | 'pending' | 'done';
+
+export const ORDER_STATUS_TRANSLATE: Record<TOrderStatus, string> = {
+  created: 'Создан',
+  pending: 'Готовится',
+  done: 'Выполнен'
+};
+
 export type TOrder = {
   _id: string;
-  status: string;
+  number: number;
+  status: TOrderStatus;
   name: string;
   createdAt: string;
   updatedAt: string;
-  number: number;
   ingredients: string[];
-};
-
-export type TOrdersData = {
-  orders: TOrder[];
-  total: number;
-  totalToday: number;
 };
 
 export type TUser = {

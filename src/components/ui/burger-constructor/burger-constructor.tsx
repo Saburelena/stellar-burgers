@@ -7,18 +7,19 @@ import {
 import styles from './burger-constructor.module.css';
 import { BurgerConstructorUIProps } from './type';
 import { TConstructorIngredient } from '@utils-types';
-import { BurgerConstructorElement, Modal } from '@components';
-import { Preloader, OrderDetailsUI } from '@ui';
+import { BurgerConstructorElement } from '@components';
 
 export const BurgerConstructorUI: FC<BurgerConstructorUIProps> = ({
   constructorItems,
   orderRequest,
   price,
-  orderModalData,
   onOrderClick,
-  closeOrderModal
+  onDeleteClick,
+  moveCard,
+  dropTargetRef,
+  error
 }) => (
-  <section className={styles.burger_constructor}>
+  <section className={styles.burger_constructor} ref={dropTargetRef}>
     {constructorItems.bun ? (
       <div className={`${styles.element} mb-4 mr-4`}>
         <ConstructorElement
@@ -45,6 +46,8 @@ export const BurgerConstructorUI: FC<BurgerConstructorUIProps> = ({
               index={index}
               totalItems={constructorItems.ingredients.length}
               key={item.id}
+              moveCard={moveCard}
+              onDelete={onDeleteClick}
             />
           )
         )
@@ -84,22 +87,17 @@ export const BurgerConstructorUI: FC<BurgerConstructorUIProps> = ({
         size='large'
         children='Оформить заказ'
         onClick={onOrderClick}
+        disabled={
+          orderRequest ||
+          !constructorItems.bun ||
+          constructorItems.ingredients.length === 0
+        }
       />
     </div>
-
-    {orderRequest && (
-      <Modal onClose={closeOrderModal} title={'Оформляем заказ...'}>
-        <Preloader />
-      </Modal>
-    )}
-
-    {orderModalData && (
-      <Modal
-        onClose={closeOrderModal}
-        title={orderRequest ? 'Оформляем заказ...' : ''}
-      >
-        <OrderDetailsUI orderNumber={orderModalData.number} />
-      </Modal>
+    {error && (
+      <p className='text text_type_main-default mt-4 text_color_error'>
+        {error}
+      </p>
     )}
   </section>
 );

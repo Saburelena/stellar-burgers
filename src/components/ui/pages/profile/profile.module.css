@@ -3,5 +3,10 @@
 }
 
 .form {
-  max-width: 480px;
+  width: 100%;
+  max-width: 640px;
+}
+
+.input {
+  width: 100%;
 }

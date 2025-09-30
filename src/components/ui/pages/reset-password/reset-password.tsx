@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, ChangeEvent } from 'react';
 import {
   Input,
   Button,
@@ -14,7 +14,8 @@ export const ResetPasswordUI: FC<ResetPasswordUIProps> = ({
   setPassword,
   handleSubmit,
   token,
-  setToken
+  setToken,
+  isLoading
 }) => (
   <main className={styles.container}>
     <div className={`pt-6 ${styles.wrapCenter}`}>
@@ -26,7 +27,9 @@ export const ResetPasswordUI: FC<ResetPasswordUIProps> = ({
       >
         <div className='pb-6'>
           <PasswordInput
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(e: ChangeEvent<HTMLInputElement>) =>
+              setPassword(e.target.value)
+            }
             value={password}
             name='password'
           />
@@ -35,7 +38,9 @@ export const ResetPasswordUI: FC<ResetPasswordUIProps> = ({
           <Input
             type='text'
             placeholder='Введите код из письма'
-            onChange={(e) => setToken(e.target.value)}
+            onChange={(e: ChangeEvent<HTMLInputElement>) =>
+              setToken(e.target.value)
+            }
             value={token}
             name='token'
             error={false}
@@ -44,7 +49,12 @@ export const ResetPasswordUI: FC<ResetPasswordUIProps> = ({
           />
         </div>
         <div className={`pb-6 ${styles.button}`}>
-          <Button type='primary' size='medium' htmlType='submit'>
+          <Button
+            type='primary'
+            size='medium'
+            htmlType='submit'
+            disabled={isLoading}
+          >
             Сохранить
           </Button>
         </div>

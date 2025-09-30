@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, ChangeEvent } from 'react';
 
 import { Input, Button } from '@zlden/react-developer-burger-ui-components';
 import styles from '../common.module.css';
@@ -9,7 +9,8 @@ export const ForgotPasswordUI: FC<PageUIProps> = ({
   errorText,
   email,
   setEmail,
-  handleSubmit
+  handleSubmit,
+  isLoading
 }) => (
   <main className={styles.container}>
     <div className={`pt-6 ${styles.wrapCenter}`}>
@@ -23,7 +24,9 @@ export const ForgotPasswordUI: FC<PageUIProps> = ({
           <Input
             type='email'
             placeholder='Укажите e-mail'
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(e: ChangeEvent<HTMLInputElement>) =>
+              setEmail(e.target.value)
+            }
             value={email}
             name='email'
             error={false}
@@ -32,7 +35,12 @@ export const ForgotPasswordUI: FC<PageUIProps> = ({
           />
         </div>
         <div className={`pb-6 ${styles.button}`}>
-          <Button type='primary' size='medium' htmlType='submit'>
+          <Button
+            type='primary'
+            size='medium'
+            htmlType='submit'
+            disabled={isLoading}
+          >
             Восстановить
           </Button>
         </div>

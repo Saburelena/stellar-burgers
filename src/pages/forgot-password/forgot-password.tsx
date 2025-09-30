@@ -1,33 +1,43 @@
-import { FC, useState, SyntheticEvent } from 'react';
+import { FC, useState, SyntheticEvent, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { forgotPasswordApi } from '@api';
 import { ForgotPasswordUI } from '@ui-pages';
+import { useAppDispatch, useAppSelector } from '../../services/store';
+import { forgotPassword, resetAuthError } from '@slices/userSlice';
 
 export const ForgotPassword: FC = () => {
-  const [email, setEmail] = useState('');
-  const [error, setError] = useState<Error | null>(null);
-
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const { error, isLoading, resetRequested } = useAppSelector(
+    (state) => state.user
+  );
+
+  const [email, setEmail] = useState('');
+
+  useEffect(() => {
+    if (resetRequested) {
+      navigate('/reset-password', { replace: true });
+    }
+  }, [resetRequested, navigate]);
+
+  useEffect(() => {
+    if (error) {
+      dispatch(resetAuthError());
+    }
+  }, [email, dispatch, error]);
 
   const handleSubmit = (e: SyntheticEvent) => {
     e.preventDefault();
-
-    setError(null);
-    forgotPasswordApi({ email })
-      .then(() => {
-        localStorage.setItem('resetPassword', 'true');
-        navigate('/reset-password', { replace: true });
-      })
-      .catch((err) => setError(err));
+    dispatch(forgotPassword(email));
   };
 
   return (
     <ForgotPasswordUI
-      errorText={error?.message}
+      errorText={error || ''}
       email={email}
       setEmail={setEmail}
       handleSubmit={handleSubmit}
+      isLoading={isLoading}
     />
   );
 };

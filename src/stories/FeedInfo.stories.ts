@@ -1,4 +1,5 @@
 import { FeedInfoUI } from '@ui';
+import type { FeedTotals } from '@ui/feed-info/type';
 import type { Meta, StoryObj } from '@storybook/react';
 
 const meta = {
@@ -15,25 +16,14 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+const sampleFeed: FeedTotals = {
+  total: 12,
+  totalToday: 2
+};
+
 export const DefaultFeedInfo: Story = {
   args: {
-    feed: {
-      orders: [
-        {
-          _id: '11111',
-          status: 'ready',
-          name: 'Burger',
-          createdAt: '',
-          updatedAt: '',
-          number: 123,
-          ingredients: ['Булка', 'Начинка']
-        }
-      ],
-      total: 12,
-      totalToday: 2,
-      isLoading: false,
-      error: null
-    },
+    feed: sampleFeed,
     readyOrders: [123, 124, 125],
     pendingOrders: [126, 127]
   }

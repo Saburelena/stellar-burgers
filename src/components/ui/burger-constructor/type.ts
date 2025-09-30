@@ -1,10 +1,16 @@
-import { TOrder } from '@utils-types';
+import { ConnectDropTarget } from 'react-dnd';
+import { TConstructorIngredient, TIngredient } from '@utils-types';
 
 export type BurgerConstructorUIProps = {
-  constructorItems: any;
+  constructorItems: {
+    bun: TIngredient | null;
+    ingredients: TConstructorIngredient[];
+  };
   orderRequest: boolean;
   price: number;
-  orderModalData: TOrder | null;
   onOrderClick: () => void;
-  closeOrderModal: () => void;
+  onDeleteClick: (id: string) => void;
+  moveCard: (dragIndex: number, hoverIndex: number) => void;
+  dropTargetRef: ConnectDropTarget;
+  error: string | null;
 };
