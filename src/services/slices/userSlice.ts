@@ -32,7 +32,7 @@ const handleAuthSuccess = (
   return user;
 };
 
-const initialState: IUserState = {
+export const initialState: IUserState = {
   user: null,
   isAuth: false,
   isAuthChecked: false,

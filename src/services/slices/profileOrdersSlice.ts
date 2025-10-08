@@ -7,7 +7,7 @@ export type TProfileOrdersState = {
   error: string | null;
 };
 
-const initialState: TProfileOrdersState = {
+export const initialState: TProfileOrdersState = {
   orders: [],
   isConnected: false,
   error: null

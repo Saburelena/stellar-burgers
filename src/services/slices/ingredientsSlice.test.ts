@@ -1,8 +1,11 @@
-import reducer, { fetchIngredients } from './ingredientsSlice';
+import reducer, { fetchIngredients, initialState } from './ingredientsSlice';
 import { TIngredient } from '@utils-types';
 
 describe('ingredientsSlice', () => {
-  const initialState = reducer(undefined, { type: 'UNKNOWN' });
+  const createState = () => ({
+    ...initialState,
+    items: [...initialState.items]
+  });
 
   const ingredients: TIngredient[] = [
     {
@@ -34,7 +37,7 @@ describe('ingredientsSlice', () => {
   ];
 
   it('should handle fetchIngredients.pending', () => {
-    const state = reducer(initialState, fetchIngredients.pending('request-id', undefined));
+    const state = reducer(createState(), fetchIngredients.pending('request-id', undefined));
     expect(state.isLoading).toBe(true);
     expect(state.error).toBeNull();
     expect(state.items).toEqual([]);
@@ -42,7 +45,7 @@ describe('ingredientsSlice', () => {
 
   it('should handle fetchIngredients.fulfilled', () => {
     const state = reducer(
-      { ...initialState, isLoading: true },
+      { ...createState(), isLoading: true },
       fetchIngredients.fulfilled(ingredients, 'request-id', undefined)
     );
     expect(state.isLoading).toBe(false);
@@ -53,7 +56,7 @@ describe('ingredientsSlice', () => {
   it('should handle fetchIngredients.rejected', () => {
     const errorMessage = 'Ошибка';
     const state = reducer(
-      { ...initialState, isLoading: true },
+      { ...createState(), isLoading: true },
       fetchIngredients.rejected(null, 'request-id', undefined, errorMessage)
     );
     expect(state.isLoading).toBe(false);

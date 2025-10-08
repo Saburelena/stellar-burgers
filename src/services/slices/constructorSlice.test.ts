@@ -3,6 +3,7 @@ import reducer, {
   removeIngredient,
   moveIngredient,
   clearConstructor,
+  initialState,
   ConstructorState
 } from './constructorSlice';
 import { TIngredient } from '@utils-types';
@@ -36,21 +37,21 @@ describe('constructorSlice', () => {
     image_mobile: 'sauce_mobile.png'
   };
 
-  const initialState: ConstructorState = {
-    bun: null,
-    ingredients: []
-  };
+  const createState = (): ConstructorState => ({
+    ...initialState,
+    ingredients: [...initialState.ingredients]
+  });
 
   it('should handle addIngredient for bun', () => {
     const action = addIngredient(bun);
-    const state = reducer(initialState, action);
+    const state = reducer(createState(), action);
     expect(state.bun).toMatchObject({ ...bun, id: expect.any(String) });
     expect(state.ingredients).toHaveLength(0);
   });
 
   it('should handle addIngredient for fillings', () => {
     const action = addIngredient(sauce);
-    const state = reducer(initialState, action);
+    const state = reducer(createState(), action);
     expect(state.bun).toBeNull();
     expect(state.ingredients).toHaveLength(1);
     expect(state.ingredients[0]).toMatchObject({ ...sauce, id: expect.any(String) });
@@ -58,7 +59,7 @@ describe('constructorSlice', () => {
 
   it('should handle removeIngredient', () => {
     const action = addIngredient(sauce);
-    const stateWithIngredient = reducer(initialState, action);
+    const stateWithIngredient = reducer(createState(), action);
     const state = reducer(stateWithIngredient, removeIngredient(action.payload.id));
     expect(state.ingredients).toHaveLength(0);
   });
@@ -67,7 +68,7 @@ describe('constructorSlice', () => {
     const firstAction = addIngredient(sauce);
     const secondAction = addIngredient({ ...sauce, _id: 'sauce-2' });
 
-    let state = reducer(initialState, firstAction);
+    let state = reducer(createState(), firstAction);
     state = reducer(state, secondAction);
 
     const reordered = reducer(state, moveIngredient({ from: 0, to: 1 }));
@@ -79,7 +80,7 @@ describe('constructorSlice', () => {
   it('should handle clearConstructor', () => {
     const bunAction = addIngredient(bun);
     const sauceAction = addIngredient(sauce);
-    let state = reducer(initialState, bunAction);
+    let state = reducer(createState(), bunAction);
     state = reducer(state, sauceAction);
     const cleared = reducer(state, clearConstructor());
     expect(cleared).toEqual(initialState);

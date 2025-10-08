@@ -1,5 +1,13 @@
 describe('Страница конструктора бургера', () => {
-  const ingredientsAlias = '@getIngredients';
+  const INGREDIENTS_ALIAS = '@getIngredients';
+  const MODAL_TITLE = 'Детали ингредиента';
+  const BUN_NAME = 'Булка N-200i';
+  const BUN_TOP = `${BUN_NAME} (верх)`;
+  const BUN_BOTTOM = `${BUN_NAME} (низ)`;
+  const SAUCE_NAME = 'Соус традиционный галактический';
+  const FILLING_NAME = 'Филе Люминесцентного тетраодонтимформа';
+  const ORDER_BUTTON_TEXT = 'Оформить заказ';
+  const ORDER_NUMBER = '98765';
 
   beforeEach(() => {
     cy.intercept('GET', '**/api/ingredients', { fixture: 'ingredients.json' }).as(
@@ -13,57 +21,49 @@ describe('Страница конструктора бургера', () => {
 
   it('добавляет булку и ингредиент в конструктор', () => {
     cy.visit('/');
-    cy.wait(ingredientsAlias);
+    cy.wait(INGREDIENTS_ALIAS);
 
-    cy.contains('li', 'Булка N-200i')
-      .should('exist')
-      .within(() => {
-        cy.contains('button', 'Добавить').click();
-      });
+    cy.addIngredientByName(BUN_NAME, 'bunIngredient');
+    cy.addIngredientByName(FILLING_NAME, 'fillingIngredient');
 
-    cy.contains('li', 'Филе Люминесцентного тетраодонтимформа')
-      .should('exist')
-      .within(() => {
-        cy.contains('button', 'Добавить').click();
-      });
-
-    cy.contains('Булка N-200i (верх)').should('be.visible');
-    cy.contains('Булка N-200i (низ)').should('be.visible');
-    cy.contains('Филе Люминесцентного тетраодонтимформа').should('be.visible');
+    cy.contains(BUN_TOP).should('be.visible');
+    cy.contains(BUN_BOTTOM).should('be.visible');
+    cy.contains(FILLING_NAME).should('be.visible');
   });
 
   it('открывает и закрывает модальное окно по кнопке', () => {
     cy.visit('/');
-    cy.wait(ingredientsAlias);
+    cy.wait(INGREDIENTS_ALIAS);
 
-    cy.contains('li', 'Булка N-200i')
+    cy.contains('li', BUN_NAME)
       .find('a')
       .first()
+      .as('ingredientLink')
       .click();
 
-    cy.contains('h3', 'Детали ингредиента').should('be.visible');
-    cy.contains('h3', 'Булка N-200i').should('be.visible');
+    cy.contains('h3', MODAL_TITLE).as('modalTitle').should('be.visible');
+    cy.contains('h3', BUN_NAME).should('be.visible');
 
-    cy.get('[data-testid="modal-close-button"]').click();
+    cy.get('[data-testid="modal-close-button"]').as('modalCloseButton').click();
 
-    cy.contains('h3', 'Детали ингредиента').should('not.exist');
+    cy.get('@modalTitle').should('not.exist');
   });
 
   it('закрывает модальное окно по клику на оверлей', () => {
     cy.visit('/');
-    cy.wait(ingredientsAlias);
+    cy.wait(INGREDIENTS_ALIAS);
 
-    cy.contains('li', 'Соус традиционный галактический')
+    cy.contains('li', SAUCE_NAME)
       .find('a')
       .first()
       .click();
 
-    cy.contains('h3', 'Детали ингредиента').should('be.visible');
-    cy.contains('h3', 'Соус традиционный галактический').should('be.visible');
+    cy.contains('h3', MODAL_TITLE).should('be.visible');
+    cy.contains('h3', SAUCE_NAME).should('be.visible');
 
-    cy.get('[data-testid="modal-overlay"]').click({ force: true });
+    cy.get('[data-testid="modal-overlay"]').as('modalOverlay').click({ force: true });
 
-    cy.contains('h3', 'Детали ингредиента').should('not.exist');
+    cy.contains('h3', MODAL_TITLE).should('not.exist');
   });
 
   it('оформляет заказ и очищает конструктор', () => {
@@ -75,32 +75,18 @@ describe('Страница конструктора бургера', () => {
     cy.setAuthTokens();
 
     cy.visit('/');
-    cy.wait(ingredientsAlias);
+    cy.wait(INGREDIENTS_ALIAS);
     cy.wait('@getUser');
 
-    cy.contains('li', 'Булка N-200i')
-      .should('exist')
-      .within(() => {
-        cy.contains('button', 'Добавить').click();
-      });
+    cy.addIngredientByName(BUN_NAME, 'bunIngredient');
+    cy.addIngredientByName(SAUCE_NAME, 'sauceIngredient');
+    cy.addIngredientByName(FILLING_NAME, 'fillingIngredient');
 
-    cy.contains('li', 'Соус традиционный галактический')
-      .should('exist')
-      .within(() => {
-        cy.contains('button', 'Добавить').click();
-      });
-
-    cy.contains('li', 'Филе Люминесцентного тетраодонтимформа')
-      .should('exist')
-      .within(() => {
-        cy.contains('button', 'Добавить').click();
-      });
-
-    cy.contains('button', 'Оформить заказ').click();
+    cy.contains('button', ORDER_BUTTON_TEXT).as('orderButton').click();
 
     cy.wait('@createOrder');
 
-    cy.contains('h2', '98765').should('be.visible');
+    cy.contains('h2', ORDER_NUMBER).as('orderNumber').should('be.visible');
 
     cy.get('[data-testid="modal-close-button"]').click();
 

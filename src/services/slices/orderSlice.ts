@@ -7,7 +7,7 @@ export interface OrderState {
   error: string | null;
 }
 
-const initialState: OrderState = {
+export const initialState: OrderState = {
   orderNumber: null,
   isLoading: false,
   error: null
@@ -29,10 +29,7 @@ const orderSlice = createSlice({
   name: 'order',
   initialState,
   reducers: {
-    clearOrder: (state) => {
-      state.orderNumber = null;
-      state.error = null;
-    }
+    clearOrder: () => initialState
   },
   extraReducers: (builder) => {
     builder
