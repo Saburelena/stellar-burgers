@@ -15,7 +15,7 @@ import {
 } from './slices/profileOrdersSlice';
 import { socketMiddleware } from './middleware/socketMiddleware';
 
-const rootReducer = combineReducers({
+export const rootReducer = combineReducers({
   ingredients: ingredientsReducer,
   constructorBurger: constructorReducer,
   order: orderReducer,
